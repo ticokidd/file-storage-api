@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: supersecurepassword
+      MYSQL_DB: api_db
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - api-db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: supersecurepassword
+      MYSQL_DATABASE: api_db
+
+volumes:
+  api-db-data:

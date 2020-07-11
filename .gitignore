@@ -1,3 +1,6 @@
 # IntelliJ config files
 .idea/
 *.iml
+
+# Compilation output
+target/

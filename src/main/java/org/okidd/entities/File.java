@@ -3,17 +3,19 @@ package org.okidd.entities;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -30,9 +32,18 @@ public class File {
 	
 	public File() {}
 	
-	public File(String name, Long version, byte[] content) {
+	public File(String name) {
+		this(name, null, null, null);
+	}
+	
+	public File(String name, Long version) {
+		this(name, version, null, null);
+	}
+	
+	public File(String name, Long version, String contentType, byte[] content) {
 		this.name = name;
 		this.version = version;
+		this.contentType = contentType;
 		this.content = content;
 	}
 	
@@ -53,8 +64,14 @@ public class File {
 	@Column(name = "created")
 	private Timestamp created;
 	
+	@Column(name = "contentType")
+	private String contentType;
+	
 	@Column(name = "content", columnDefinition = "LONGBLOB")
 	private byte[] content;
+	
+//	@OneToOne(mappedBy = "file", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	private FileContent fileContent;
 	
 	public Long getId() {
 		return id;
@@ -88,6 +105,14 @@ public class File {
 		this.created = created;
 	}
 	
+	public String getContentType() {
+		return contentType;
+	}
+	
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	
 	public byte[] getContent() {
 		return content;
 	}
@@ -95,6 +120,14 @@ public class File {
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
+	
+//	public FileContent getFileContent() {
+//		return fileContent;
+//	}
+	
+//	public void setFileContent(FileContent fileContent) {
+//		this.fileContent = fileContent;
+//	}
 	
 	@Override
 	public boolean equals(Object o) {
@@ -105,13 +138,11 @@ public class File {
 			return false;
 		}
 		File file = (File) o;
-		return getName().equals(file.getName()) && Arrays.equals(getContent(), file.getContent());
+		return getName().equals(file.getName()) && getVersion().equals(file.getVersion());
 	}
 	
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(getName());
-		result = 31 * result + Arrays.hashCode(getContent());
-		return result;
+		return Objects.hash(getName(), getVersion());
 	}
 }

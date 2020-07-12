@@ -1,6 +1,7 @@
 package org.okidd.services;
 
 import org.okidd.entities.File;
+import org.okidd.entities.FileInfo;
 import org.okidd.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -23,23 +24,17 @@ public class FileServiceImpl implements FileService {
 	@Autowired
 	private FileRepository fileRepository;
 	
-	/**
-	 *
-	 * @param multipartFile
-	 * @return
-	 * @throws IOException
-	 * @throws IllegalArgumentException
-	 */
 	@Override
 	public File saveNewFile(MultipartFile multipartFile) throws IOException, IllegalArgumentException {
 		String filename = getFileName(multipartFile);
 		
-		Example<File> queryExample = Example.of(new File(filename, null, null));
-		if (fileRepository.count(queryExample)  > 0) {
+//		Example<File> queryExample = Example.of(new File(filename));
+//		if (fileRepository.count(queryExample) > 0) {
+		if (fileRepository.existsByName(filename)) {
 			throw new InvalidTransactionException("Version(s) already exist for that file, cannot create anew.");
 		}
 		
-		File newFile = new File(filename, 1L, multipartFile.getBytes());
+		File newFile = new File(filename, 1L, multipartFile.getContentType(), multipartFile.getBytes());
 		fileRepository.save(newFile);
 		
 		return newFile;
@@ -49,49 +44,62 @@ public class FileServiceImpl implements FileService {
 	public File saveNewFileVersion(MultipartFile multipartFile) throws IOException, IllegalArgumentException {
 		String filename = getFileName(multipartFile);
 		
-		Example<File> queryExample = Example.of(new File(filename, null, null));
-		Iterable<File> files = fileRepository.findAll(queryExample, Sort.by(Sort.Direction.DESC, "version"));
-		
-		File latestFile = files.iterator().hasNext() ? files.iterator().next() : null;
-		
+		File latestFile = findLatest(filename);
 		if (latestFile == null) {
 			throw new InvalidTransactionException("No version exists for that file, cannot create update version.");
 		}
 		
-		File newVersion = new File(filename, latestFile.getVersion() + 1, multipartFile.getBytes());
-		fileRepository.save(newVersion);
+		File updatedFile = new File(filename, latestFile.getVersion() + 1L, multipartFile.getContentType(),
+				multipartFile.getBytes());
+		fileRepository.save(updatedFile);
 		
-		return newVersion;
+		return updatedFile;
 	}
 	
 	@Override
-	public File findLatest(String name) {
-		return null;
+	public File findLatest(String filename) {
+//		Example<File> queryExample = Example.of(new File(filename));
+//		Iterable<File> files = fileRepository.findAll(queryExample, Sort.by(Sort.Direction.DESC, "version"));
+//		return files.iterator().hasNext() ? files.iterator().next() : null;
+		return fileRepository.findTopByNameOrderByVersionDesc(filename);
 	}
 	
 	@Override
-	public File findVersion(String name, Long version) {
-		return null;
+	public File findVersion(String filename, Long version) {
+//		Example<File> queryExample = Example.of(new File(filename, version));
+//		return fileRepository.findOne(queryExample).orElse(null);
+		return fileRepository.findTopByNameAndVersion(filename, version);
 	}
 	
 	@Override
-	public List<File> findAll() {
-		return null;
+	public Iterable<FileInfo> findAllVersions(String filename) {
+		return fileRepository.findAllByNameOrderByVersionDesc(filename, FileInfo.class);
+		
+//		Example<File> queryExample = Example.of(new File(filename));
+//		return fileRepository.findAll(queryExample);
 	}
 	
 	@Override
-	public List<Long> getVersionList(String name) {
-		return null;
+	public Iterable<FileInfo> findAll() {
+		return fileRepository.findAllOrderByNameAscAndVersionDesc(FileInfo.class);
 	}
 	
 	@Override
-	public Boolean deleteVersion(String name, Long version) {
-		return null;
+	public void deleteVersion(String filename, Long version) {
+		fileRepository.deleteByNameAndVersion(filename, version);
+//		File toDelete = findVersion(filename, version);
+//		if (toDelete != null) {
+//			fileRepository.delete(toDelete);
+//		}
 	}
 	
 	@Override
-	public Boolean deleteAllVersions(String name) {
-		return null;
+	public void deleteAllVersions(String filename) {
+		fileRepository.deleteAllByName(filename);
+//		Iterable<File> toDelete = findAllVersions(filename);
+//		if (toDelete.iterator().hasNext()) {
+//			fileRepository.deleteAll(toDelete);
+//		}
 	}
 	
 	private String getFileName(MultipartFile multipartFile) {

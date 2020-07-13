@@ -34,9 +34,7 @@ public class FileServiceImpl extends FileServiceAbstractImpl implements FileServ
 		}
 		
 		File newFile = new File(filename, 1L, multipartFile.getContentType(), multipartFile.getBytes());
-		fileRepository.save(newFile);
-		
-		return newFile;
+		return fileRepository.save(newFile);
 	}
 	
 	@Override
@@ -50,9 +48,7 @@ public class FileServiceImpl extends FileServiceAbstractImpl implements FileServ
 		
 		File updatedFile = new File(filename, latestFile.getVersion() + 1L, multipartFile.getContentType(),
 				multipartFile.getBytes());
-		fileRepository.save(updatedFile);
-		
-		return updatedFile;
+		return fileRepository.save(updatedFile);
 	}
 	
 	@Override

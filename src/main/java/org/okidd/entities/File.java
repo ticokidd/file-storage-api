@@ -3,18 +3,13 @@ package org.okidd.entities;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -60,7 +55,6 @@ public class File {
 	private Long version;
 	
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created")
 	private Timestamp created;
 	
@@ -69,9 +63,6 @@ public class File {
 	
 	@Column(name = "content", columnDefinition = "LONGBLOB")
 	private byte[] content;
-	
-//	@OneToOne(mappedBy = "file", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	private FileContent fileContent;
 	
 	public Long getId() {
 		return id;
@@ -121,14 +112,6 @@ public class File {
 		this.content = content;
 	}
 	
-//	public FileContent getFileContent() {
-//		return fileContent;
-//	}
-	
-//	public void setFileContent(FileContent fileContent) {
-//		this.fileContent = fileContent;
-//	}
-	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -138,11 +121,11 @@ public class File {
 			return false;
 		}
 		File file = (File) o;
-		return getName().equals(file.getName()) && getVersion().equals(file.getVersion());
+		return this.name.equals(file.name) && this.version.equals(file.version);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(getName(), getVersion());
+		return Objects.hash(this.name, this.version);
 	}
 }

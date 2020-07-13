@@ -26,6 +26,7 @@ import java.io.IOException;
 @RequestMapping(path = "/file")
 public class FileController {
 	
+	// inMemoryFileService still needs an active database connection, else the application will fail during startup
 	@Autowired
 //	@Qualifier("inMemoryFileService")
 	@Qualifier("databaseFileService")

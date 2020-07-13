@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -21,7 +22,8 @@ import java.util.Objects;
 		indexes = {
 			@Index(columnList = "name", name = "name_idx"),
 			@Index(columnList = "name,version", name = "name_version_idx")
-		}
+		},
+		uniqueConstraints = @UniqueConstraint(columnNames = {"name", "version"})
 )
 public class File {
 	

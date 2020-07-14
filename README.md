@@ -25,8 +25,7 @@ both POST and PUT usage,
 - add proper exception handling instead of letting Spring return 400 and 500
 errors,
 - add logging,
-- extend testing coverage,
-- avoid using root user for the database
+- extend testing coverage
 
 ### Endpoints:
 

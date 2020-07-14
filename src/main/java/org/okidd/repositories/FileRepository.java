@@ -1,7 +1,7 @@
 package org.okidd.repositories;
 
-import org.okidd.entities.File;
-import org.okidd.entities.FileInfo;
+import org.okidd.entities.FileVersion;
+import org.okidd.dtos.FileInfo;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
@@ -13,10 +13,10 @@ import java.util.Collection;
  * @author octaviokidd
  */
 @Repository
-public interface FileRepository extends CrudRepository<File, Long>, QueryByExampleExecutor<File> {
+public interface FileRepository extends CrudRepository<FileVersion, Long>, QueryByExampleExecutor<FileVersion> {
 	boolean existsByName(String name);
-	File findTopByNameOrderByVersionDesc(String name);
-	File findTopByNameAndVersion(String name, Long version);
+	FileVersion findTopByNameOrderByVersionDesc(String name);
+	FileVersion findTopByNameAndVersion(String name, Long version);
 	<T> Collection<T> findAllByNameOrderByVersionDesc(String name, Class<T> type);
 	
 	/**

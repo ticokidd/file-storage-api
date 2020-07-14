@@ -25,19 +25,19 @@ import java.util.Objects;
 		},
 		uniqueConstraints = @UniqueConstraint(columnNames = {"name", "version"})
 )
-public class File {
+public class FileVersion {
 	
-	public File() {}
+	public FileVersion() {}
 	
-	public File(String name) {
+	public FileVersion(String name) {
 		this(name, null, null, null);
 	}
 	
-	public File(String name, Long version) {
+	public FileVersion(String name, Long version) {
 		this(name, version, null, null);
 	}
 	
-	public File(String name, Long version, String contentType, byte[] content) {
+	public FileVersion(String name, Long version, String contentType, byte[] content) {
 		this.name = name;
 		this.version = version;
 		this.contentType = contentType;
@@ -122,7 +122,7 @@ public class File {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		File file = (File) o;
+		FileVersion file = (FileVersion) o;
 		return this.name.equals(file.name) && this.version.equals(file.version);
 	}
 	

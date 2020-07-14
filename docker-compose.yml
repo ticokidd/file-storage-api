@@ -7,10 +7,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+    depends_on:
+      - mysql
+    restart: on-failure
     environment:
       MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: supersecurepassword
+#      MYSQL_USER: root
+#      MYSQL_PASSWORD: supersecurepassword
+      MYSQL_USER: apiuser
+      MYQSL_PASSWORD: apipassword
       MYSQL_DB: api_db
 
   mysql:
@@ -20,6 +25,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: supersecurepassword
       MYSQL_DATABASE: api_db
+      MYSQL_USER: apiuser
+      MYSQL_PASSWORD: apipassword
 
 volumes:
   api-db-data:

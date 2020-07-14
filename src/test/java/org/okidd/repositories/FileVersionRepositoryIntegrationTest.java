@@ -4,8 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.okidd.entities.File;
-import org.okidd.entities.FileInfo;
+import org.okidd.entities.FileVersion;
+import org.okidd.dtos.FileInfo;
 import org.okidd.testutils.IntegrationTestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -29,7 +29,7 @@ import static org.okidd.testutils.IntegrationTestUtils.testFileVersion1;
 @RunWith(SpringRunner.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DataJpaTest
-public class FileRepositoryIntegrationTest {
+public class FileVersionRepositoryIntegrationTest {
 	
 	@Autowired
 	private FileRepository fileRepository;
@@ -67,7 +67,7 @@ public class FileRepositoryIntegrationTest {
 	
 	@Test
 	public void testFindByNameAndVersion_fileExists_fileReturned() {
-		File retrievedFile = fileRepository.findTopByNameAndVersion(testFileName1, testFileVersion1);
+		FileVersion retrievedFile = fileRepository.findTopByNameAndVersion(testFileName1, testFileVersion1);
 		assertNotNull("Missing auto-generated id", retrievedFile.getId());
 		assertEquals("Name changed on save/retrieval", testFileName1, retrievedFile.getName());
 		assertEquals("Version changed on save/retrieval", testFileVersion1, retrievedFile.getVersion());
@@ -78,7 +78,7 @@ public class FileRepositoryIntegrationTest {
 	
 	@Test
 	public void testUniqueConstraintOnNameVersion_nameVersionDupleExists_saveFails() {
-		File repeatedNameVersionFile = new File(testFileName1, testFileVersion1, testFileContentType1, testFileContent1);
+		FileVersion repeatedNameVersionFile = new FileVersion(testFileName1, testFileVersion1, testFileContentType1, testFileContent1);
 		String failedAssertMsg = "Name-Version constraint on File entity not working.";
 		assertThrows(failedAssertMsg, DataIntegrityViolationException.class,
 				() -> fileRepository.save(repeatedNameVersionFile));

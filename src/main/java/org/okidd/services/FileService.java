@@ -1,7 +1,7 @@
 package org.okidd.services;
 
-import org.okidd.entities.File;
-import org.okidd.entities.FileInfo;
+import org.okidd.entities.FileVersion;
+import org.okidd.dtos.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public interface FileService {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	File saveNewFile(MultipartFile multipartFile) throws IOException, IllegalArgumentException;
+	FileVersion saveNewFile(MultipartFile multipartFile) throws IOException, IllegalArgumentException;
 	
 	/**
 	 * Saves new file version. Does not accept files with name that do not match existing records.
@@ -29,7 +29,7 @@ public interface FileService {
 	 * @throws IOException
 	 * @throws IllegalArgumentException
 	 */
-	File saveNewFileVersion(MultipartFile multipartFile) throws IOException, IllegalArgumentException;
+	FileVersion saveNewFileVersion(MultipartFile multipartFile) throws IOException, IllegalArgumentException;
 	
 	/**
 	 * Retrieves latest version of a given file
@@ -37,7 +37,7 @@ public interface FileService {
 	 * @param filename
 	 * @return
 	 */
-	File findLatest(String filename);
+	FileVersion findLatest(String filename);
 	
 	/**
 	 *
@@ -45,7 +45,7 @@ public interface FileService {
 	 * @param version
 	 * @return
 	 */
-	File findVersion(String filename, Long version);
+	FileVersion findVersion(String filename, Long version);
 	
 	/**
 	 *

@@ -1,6 +1,6 @@
 package org.okidd.testutils;
 
-import org.okidd.entities.File;
+import org.okidd.entities.FileVersion;
 import org.okidd.repositories.FileRepository;
 
 /**
@@ -19,16 +19,16 @@ public class IntegrationTestUtils {
 	public static final String testFileContentType2 = "image/jpeg";
 	public static final byte[] testFileContent2 = testFileContentType2.getBytes();
 	
-	private static File testFile1;
-	private static File testFile2;
-	private static File testFile3;
+	private static FileVersion testFile1;
+	private static FileVersion testFile2;
+	private static FileVersion testFile3;
 	
 	private IntegrationTestUtils() {}
 	
 	public static void createThreeFiles(FileRepository fileRepository) {
-		testFile1 = new File(testFileName1, testFileVersion1, testFileContentType1, testFileContent1);
-		testFile2 = new File(testFileName2, testFileVersion2, testFileContentType2, testFileContent2);
-		testFile3 = new File(testFileName1, testFileVersion1_2, testFileContentType1, testFileContent1);
+		testFile1 = new FileVersion(testFileName1, testFileVersion1, testFileContentType1, testFileContent1);
+		testFile2 = new FileVersion(testFileName2, testFileVersion2, testFileContentType2, testFileContent2);
+		testFile3 = new FileVersion(testFileName1, testFileVersion1_2, testFileContentType1, testFileContent1);
 		fileRepository.save(testFile1);
 		fileRepository.save(testFile2);
 		fileRepository.save(testFile3);

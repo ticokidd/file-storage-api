@@ -1,7 +1,7 @@
 package org.okidd.services;
 
-import org.okidd.entities.File;
-import org.okidd.entities.FileInfo;
+import org.okidd.entities.FileVersion;
+import org.okidd.dtos.FileInfo;
 import org.okidd.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,38 +29,38 @@ public class FileServiceImpl implements FileService {
 	private FileRepository fileRepository;
 	
 	@Override
-	public File saveNewFile(MultipartFile multipartFile) throws IOException, IllegalArgumentException {
+	public FileVersion saveNewFile(MultipartFile multipartFile) throws IOException, IllegalArgumentException {
 		String filename = getFileName(multipartFile);
 		
 		if (fileRepository.existsByName(filename)) {
 			throw new InvalidTransactionException("Version(s) already exist for that file, cannot create anew.");
 		}
 		
-		File newFile = new File(filename, 1L, multipartFile.getContentType(), multipartFile.getBytes());
+		FileVersion newFile = new FileVersion(filename, 1L, multipartFile.getContentType(), multipartFile.getBytes());
 		return fileRepository.save(newFile);
 	}
 	
 	@Override
-	public File saveNewFileVersion(MultipartFile multipartFile) throws IOException, IllegalArgumentException {
+	public FileVersion saveNewFileVersion(MultipartFile multipartFile) throws IOException, IllegalArgumentException {
 		String filename = getFileName(multipartFile);
 		
-		File latestFile = findLatest(filename);
+		FileVersion latestFile = findLatest(filename);
 		if (latestFile == null) {
 			throw new InvalidTransactionException("No version exists for that file, cannot create update version.");
 		}
 		
-		File updatedFile = new File(filename, latestFile.getVersion() + 1L, multipartFile.getContentType(),
+		FileVersion updatedFile = new FileVersion(filename, latestFile.getVersion() + 1L, multipartFile.getContentType(),
 				multipartFile.getBytes());
 		return fileRepository.save(updatedFile);
 	}
 	
 	@Override
-	public File findLatest(String filename) {
+	public FileVersion findLatest(String filename) {
 		return fileRepository.findTopByNameOrderByVersionDesc(filename);
 	}
 	
 	@Override
-	public File findVersion(String filename, Long version) {
+	public FileVersion findVersion(String filename, Long version) {
 		return fileRepository.findTopByNameAndVersion(filename, version);
 	}
 	

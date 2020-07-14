@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureTestDatabase
 @AutoConfigureTestEntityManager
 @ImportAutoConfiguration
-public class FileControllerIntegrationTest {
+public class FileVersionControllerIntegrationTest {
 	
 	private static final String mockFileName = "test-file.mock";
 	private static final String mockFileContentType = "image/jpeg";
@@ -73,7 +73,7 @@ public class FileControllerIntegrationTest {
 	
 	@Test
 	public void testListFileVersions_findAll_returnFileInfoJsonArrayOrderedByNameAscVersionDesc() throws Exception {
-		mvc.perform(get("/file/list"))
+		mvc.perform(get("/files/list"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(3)))
 				.andExpect(jsonPath("$[0].name", is(testFileName2)))
@@ -89,19 +89,19 @@ public class FileControllerIntegrationTest {
 		MockMultipartFile mockMultipartFile = new MockMultipartFile("file", mockFileName, mockFileContentType,
 				mockFileContent);
 		
-		mvc.perform(multipart("/file/add_new").file(mockMultipartFile)).andExpect(status().isOk());
+		mvc.perform(multipart("/files").file(mockMultipartFile)).andExpect(status().isOk());
 		
-		MvcResult result = mvc.perform(get("/file?filename=" + mockFileName)).andExpect(status().isOk())
+		MvcResult result = mvc.perform(get("/files?filename=" + mockFileName)).andExpect(status().isOk())
 				.andReturn();
 		
 		assertArrayEquals("Unexpected file content", mockFileContent, result.getResponse().getContentAsByteArray());
 		
-		mvc.perform(delete("/file?filename=" + mockFileName + "&version=1")).andExpect(status().isNoContent());
+		mvc.perform(delete("/files?filename=" + mockFileName + "&version=1")).andExpect(status().isNoContent());
 	}
 	
 	@Test
 	public void testDownloadFile_invalidFile_statusNotFound() throws Exception {
-		mvc.perform(get("/file?filename=somebadfilename.jpog")).andExpect(status().isNotFound());
+		mvc.perform(get("/files?filename=somebadfilename.jpog")).andExpect(status().isNotFound());
 	}
 	
 }

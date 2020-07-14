@@ -3,10 +3,9 @@ package org.okidd.controllers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.okidd.entities.FileInfo;
+import org.okidd.dtos.FileInfo;
 import org.okidd.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(FileController.class)
-public class FileControllerTest {
+public class FileVersionControllerTest {
 	
 	private static final String mockFileName = "mock-file.txt";
 	private static final Long mockFileVersion1 = 1L;
@@ -58,7 +57,7 @@ public class FileControllerTest {
 	
 	@Test
 	public void testListFileVersions_findAll_returnFileInfoJsonArray() throws Exception {
-		mvc.perform(get("/file/list"))
+		mvc.perform(get("/files/list"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(3)))
 				.andExpect(jsonPath("$[0].name", is(mockFileName)))
@@ -68,7 +67,7 @@ public class FileControllerTest {
 	
 	@Test
 	public void testListFileVersions_findAllVersions_returnFileInfoJsonArray() throws Exception {
-		mvc.perform(get("/file/list?filename=" + mockFileName))
+		mvc.perform(get("/files/list?filename=" + mockFileName))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].name", is(mockFileName)))

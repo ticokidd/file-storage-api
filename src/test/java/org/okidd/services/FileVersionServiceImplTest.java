@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.okidd.entities.File;
+import org.okidd.entities.FileVersion;
 import org.okidd.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -21,7 +21,7 @@ import java.io.IOException;
  * @author octaviokidd
  */
 @RunWith(SpringRunner.class)
-public class FileServiceImplTest {
+public class FileVersionServiceImplTest {
 	
 	private static final String mockFileName = "test-file.mock";
 	private static final Long mockFileVersion = 1L;
@@ -45,13 +45,13 @@ public class FileServiceImplTest {
 	
 	@Before
 	public void setUp() {
-		File file = new File(mockFileName, mockFileVersion, mockFileContentType, mockFileContent);
+		FileVersion file = new FileVersion(mockFileName, mockFileVersion, mockFileContentType, mockFileContent);
 		Mockito.when(fileRepository.findTopByNameAndVersion(mockFileName, mockFileVersion)).thenReturn(file);
 		
 		Mockito.when(fileRepository.findTopByNameOrderByVersionDesc(mockNewFileName)).thenReturn(null);
 		
-		File newFile = new File(mockNewFileName, mockFileVersion, mockFileContentType, mockFileContent);
-		File newFileWithId = new File(mockNewFileName, mockFileVersion, mockFileContentType, mockFileContent);
+		FileVersion newFile = new FileVersion(mockNewFileName, mockFileVersion, mockFileContentType, mockFileContent);
+		FileVersion newFileWithId = new FileVersion(mockNewFileName, mockFileVersion, mockFileContentType, mockFileContent);
 		newFileWithId.setId(1L);
 		Mockito.when(fileRepository.save(newFile)).thenReturn(newFileWithId);
 		
@@ -61,7 +61,7 @@ public class FileServiceImplTest {
 	
 	@Test
 	public void testFindVersion_validNameAndVersion_fileFound() {
-		File file = fileService.findVersion(mockFileName, mockFileVersion);
+		FileVersion file = fileService.findVersion(mockFileName, mockFileVersion);
 		assertEquals("File name not expected", mockFileName, file.getName());
 	}
 	
@@ -70,7 +70,7 @@ public class FileServiceImplTest {
 		MockMultipartFile mockMultipartFile = new MockMultipartFile(mockNewFileName, mockNewFileName,
 				mockFileContentType, mockFileContent);
 		
-		File file = fileService.saveNewFile(mockMultipartFile);
+		FileVersion file = fileService.saveNewFile(mockMultipartFile);
 		
 		assertNotNull("Id should not be null", file.getId());
 		assertEquals("File name not expected", mockNewFileName, file.getName());

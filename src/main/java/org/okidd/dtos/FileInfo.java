@@ -1,4 +1,6 @@
-package org.okidd.entities;
+package org.okidd.dtos;
+
+import org.okidd.entities.FileVersion;
 
 import java.util.Objects;
 
@@ -17,7 +19,7 @@ public class FileInfo {
 		this.contentType = contentType;
 	}
 	
-	public FileInfo(File file) {
+	public FileInfo(FileVersion file) {
 		this.name = file.getName();
 		this.version = file.getVersion();
 		this.contentType = file.getContentType();

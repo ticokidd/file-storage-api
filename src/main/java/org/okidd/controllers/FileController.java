@@ -1,7 +1,7 @@
 package org.okidd.controllers;
 
-import org.okidd.entities.File;
-import org.okidd.entities.FileInfo;
+import org.okidd.entities.FileVersion;
+import org.okidd.dtos.FileInfo;
 import org.okidd.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,32 +22,32 @@ import java.io.IOException;
  * @author octaviokidd
  */
 @Controller
-@RequestMapping(path = "/file")
+@RequestMapping(path = "/files")
 public class FileController {
 	
 	@Autowired
 	private FileService fileService;
 	
-	@PostMapping(path = "/add_new")
+	@PostMapping()
 	public ResponseEntity<FileInfo> uploadNewFile(@RequestParam("file") MultipartFile file)
 			throws IOException {
 		// TODO: prettify error on reject large files from being uploaded to prevent the database from ballooning
 		
 		// TODO: properly handle exceptions
-		File savedFile = fileService.saveNewFile(file);
+		FileVersion savedFile = fileService.saveNewFile(file);
 		
 		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(new FileInfo(savedFile));
 	}
 	
-	@PutMapping(path = "/add_new_version")
+	@PutMapping()
 	public ResponseEntity<FileInfo> uploadNewFileVersion(@RequestParam("file") MultipartFile file)
 			throws IOException {
 		// TODO: prettify error on reject large files from being uploaded to prevent the database from ballooning
 		
 		// TODO: properly handle exceptions
-		File savedFileVersion = fileService.saveNewFileVersion(file);
+		FileVersion savedFile = fileService.saveNewFileVersion(file);
 		
-		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(new FileInfo(savedFileVersion));
+		return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(new FileInfo(savedFile));
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class FileController {
 	public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String filename,
 			@RequestParam(value = "version", required = false) Long version) {
 		
-		File file = (version == null) ? fileService.findLatest(filename) : fileService.findVersion(filename, version);
+		FileVersion file = (version == null) ? fileService.findLatest(filename) : fileService.findVersion(filename, version);
 		
 		if (file != null) {
 			return ResponseEntity.ok()

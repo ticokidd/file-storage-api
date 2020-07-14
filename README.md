@@ -8,19 +8,32 @@ retrieval, deletion, and updates of any file. Updates do not modify existing
 files, but instead create new versions of the same file. Files get saved to a
 MySQL database. Basic unit testing and integration testing is provided.
 
-##### Notes:
+#### To run the project
 
-The endpoints 'Add New File and 'Add New File Version' could be coalesced into a
-single POST endpoint that adds new files, and increases the version number when
+1. Make sure you have docker-compose installed on your machine
+2. Clone the repository
+3. Run `./mvnw install` to generate the JAR file (`./mvnw.cmd install` on Windows)
+4. Run `docker-compose up --build -d`
+5. The application will be running at `localhost:8080`
+
+##### Notes / Points for future improvement:
+
+- The endpoints 'Add New File and 'Add New File Version' could be coalesced into
+a single POST endpoint that adds new files, and increases the version number when
 a matching filename already exists; they exist separately simply to showcase
-both POST and PUT usage.
+both POST and PUT usage,
+- add proper exception handling instead of letting Spring return 400 and 500
+errors,
+- add logging,
+- extend testing coverage,
+- avoid using root user for the database
 
 ### Endpoints:
 
 #### **Add New File**
   Stores the first version of a file.
   
-* URL: `/file/add_new`
+* URL: `/files`
 
 * Method: `POST`
 
@@ -43,11 +56,17 @@ both POST and PUT usage.
         - Missing file or 'file' key in the form data
         - Tried to create a new file but a file with the same name already exists
           (see 'Add New File Version' endpoint)
+  
+  * Code: `500 INTERNAL SERVER ERROR`
+    
+      Possible causes:
+      
+          - File size exeeded allowed maximum of 16,380 KB
 
 #### **Add New File Version**
   Stores a new version of an existing file.
   
-* URL: `/file/add_new_version`
+* URL: `/files`
 
 * Method: `PUT`
 
@@ -75,7 +94,7 @@ both POST and PUT usage.
   Retrieves a file version. `version` query parameter is optional, without it
   the latest version will be retrieved.
   
-* URL: `/file`
+* URL: `/files`
 
 * Method: `GET`
 
@@ -112,7 +131,7 @@ both POST and PUT usage.
   file information objects for all files with a matching name. The list will be
   ordered by filename (asc) and version (desc).
   
-* URL: `/file/list`
+* URL: `/files/list`
 
 * Method: `GET`
 
@@ -147,7 +166,7 @@ both POST and PUT usage.
   Deletes a file version. `version` query parameter is optional, without it
   all versions of that file will be deleted.
   
-* URL: `/file`
+* URL: `/files`
 
 * Method: `GET`
 
@@ -160,6 +179,8 @@ both POST and PUT usage.
 * Success Response:
   
   * Code: `204 NO CONTENT`
+
+* Error Response:
 
   * Code: `400 BAD REQUEST`
   

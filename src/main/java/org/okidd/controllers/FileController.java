@@ -28,10 +28,6 @@ public class FileController {
 	@Autowired
 	private FileService fileService;
 	
-	// Note: the endpoints /add_new and /add_new_version could be coalesced into a single POST endpoint that adds new
-	// files, and increases the version number when a matching filename is found; they are separated simply to
-	// showcase both POST and PUT usage.
-	
 	@PostMapping(path = "/add_new")
 	public ResponseEntity<FileInfo> uploadNewFile(@RequestParam("file") MultipartFile file)
 			throws IOException {

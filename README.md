@@ -12,8 +12,8 @@ MySQL database. Basic unit testing and integration testing is provided.
 
 The endpoints 'Add New File and 'Add New File Version' could be coalesced into a
 single POST endpoint that adds new files, and increases the version number when
-a matching filename already exists; they are separated simply to showcase both
-POST and PUT usage.
+a matching filename already exists; they exist separately simply to showcase
+both POST and PUT usage.
 
 ### Endpoints:
 

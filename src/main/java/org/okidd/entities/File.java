@@ -63,7 +63,7 @@ public class File {
 	@Column(name = "contentType")
 	private String contentType;
 	
-	@Column(name = "content", columnDefinition = "LONGBLOB")
+	@Column(name = "content", columnDefinition = "MEDIUMBLOB")
 	private byte[] content;
 	
 	public Long getId() {

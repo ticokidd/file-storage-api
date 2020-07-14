@@ -6,6 +6,7 @@ import org.okidd.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.InvalidTransactionException;
@@ -20,7 +21,9 @@ import java.util.stream.Collectors;
  */
 @Service
 @Qualifier("databaseFileService")
-public class FileServiceImpl extends FileServiceAbstractImpl implements FileService {
+public class FileServiceImpl implements FileService {
+	
+	private static final String BAD_FILE_ERR = "File must not be null and it must have a name.";
 	
 	@Autowired
 	private FileRepository fileRepository;
@@ -99,6 +102,15 @@ public class FileServiceImpl extends FileServiceAbstractImpl implements FileServ
 	@Override
 	public void deleteAllVersions(String filename) {
 		fileRepository.deleteAllByName(filename);
+	}
+	
+	private String getFileName(MultipartFile multipartFile) {
+		if (multipartFile == null || multipartFile.getOriginalFilename() == null
+				|| multipartFile.getOriginalFilename().trim().isEmpty()) {
+			throw new IllegalArgumentException(BAD_FILE_ERR);
+		}
+		
+		return StringUtils.getFilename(StringUtils.cleanPath(multipartFile.getOriginalFilename()));
 	}
 	
 }

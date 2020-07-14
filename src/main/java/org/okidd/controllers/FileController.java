@@ -4,7 +4,6 @@ import org.okidd.entities.File;
 import org.okidd.entities.FileInfo;
 import org.okidd.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,7 @@ import java.io.IOException;
 @RequestMapping(path = "/file")
 public class FileController {
 	
-	// inMemoryFileService still needs an active database connection, else the application will fail during startup
 	@Autowired
-//	@Qualifier("inMemoryFileService")
-	@Qualifier("databaseFileService")
 	private FileService fileService;
 	
 	// Note: the endpoints /add_new and /add_new_version could be coalesced into a single POST endpoint that adds new
@@ -39,9 +35,7 @@ public class FileController {
 	@PostMapping(path = "/add_new")
 	public ResponseEntity<FileInfo> uploadNewFile(@RequestParam("file") MultipartFile file)
 			throws IOException {
-		// TODO: reject large files from being uploaded to prevent the database from ballooning
-		
-		// TODO: error on null file
+		// TODO: prettify error on reject large files from being uploaded to prevent the database from ballooning
 		
 		// TODO: properly handle exceptions
 		File savedFile = fileService.saveNewFile(file);
@@ -52,9 +46,7 @@ public class FileController {
 	@PutMapping(path = "/add_new_version")
 	public ResponseEntity<FileInfo> uploadNewFileVersion(@RequestParam("file") MultipartFile file)
 			throws IOException {
-		// TODO: reject large files from being uploaded to prevent the database from ballooning
-		
-		// TODO: error on null file
+		// TODO: prettify error on reject large files from being uploaded to prevent the database from ballooning
 		
 		// TODO: properly handle exceptions
 		File savedFileVersion = fileService.saveNewFileVersion(file);
@@ -72,8 +64,6 @@ public class FileController {
 	public ResponseEntity<byte[]> downloadFile(@RequestParam("filename") String filename,
 			@RequestParam(value = "version", required = false) Long version) {
 		
-		// TODO: error on null filename
-		
 		File file = (version == null) ? fileService.findLatest(filename) : fileService.findVersion(filename, version);
 		
 		if (file != null) {
@@ -87,7 +77,9 @@ public class FileController {
 	}
 	
 	@GetMapping(path = "/list")
-	public ResponseEntity<Iterable<FileInfo>> listFileVersions(@RequestParam(value = "filename", required = false) String filename) {
+	public ResponseEntity<Iterable<FileInfo>> listFileVersions(
+			@RequestParam(value = "filename", required = false) String filename) {
+		
 		Iterable<FileInfo> files = filename != null ? fileService.findAllVersions(filename) : fileService.findAll();
 		
 		if (files.iterator().hasNext()) {
@@ -98,7 +90,9 @@ public class FileController {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<Object> deleteFileVersion(@RequestParam("filename") String filename, @RequestParam(value = "version", required = false) Long version) {
+	public ResponseEntity<Object> deleteFileVersion(@RequestParam("filename") String filename,
+			@RequestParam(value = "version", required = false) Long version) {
+		
 		if (version == null) {
 			fileService.deleteAllVersions(filename);
 		} else {

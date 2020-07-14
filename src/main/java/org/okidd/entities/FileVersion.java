@@ -15,6 +15,8 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
+ * File entity. Represents a specific version of a file. Must be unique on name-version duple.
+ *
  * @author octaviokidd
  */
 @Entity

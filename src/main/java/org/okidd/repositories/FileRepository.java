@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 
 /**
+ * CRUD Repository for {@link FileVersion} entities. Method names are generally self-explanatory.
+ *
  * @author octaviokidd
  */
 @Repository

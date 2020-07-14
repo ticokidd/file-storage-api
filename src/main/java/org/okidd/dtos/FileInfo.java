@@ -5,6 +5,8 @@ import org.okidd.entities.FileVersion;
 import java.util.Objects;
 
 /**
+ * Projection DTO to avoid loading file contents when listing all files.
+ *
  * @author octaviokidd
  */
 public class FileInfo {
